@@ -4,133 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>ALAN STUDIO | AI Content Engine</title>
+    <title>ALAN STUDIO | Premium AI</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            background-color: #000;
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.1) 0, transparent 50%),
-                radial-gradient(at 100% 0%, hsla(339,49%,30%,0.1) 0, transparent 50%);
-        }
-        .card-cyber {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .btn-gold {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            color: #000;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-        }
-        .btn-gold:hover {
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
-            transform: translateY(-2px);
-        }
+        body { background: #000; font-family: sans-serif; }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
-<body class="text-white min-h-screen p-6 md:p-12">
+<body class="text-white p-6">
+    <div class="max-w-xl mx-auto space-y-8">
+        <h1 class="text-4xl font-black text-center text-yellow-500 italic">ALAN STUDIO</h1>
 
-    <div class="max-w-3xl mx-auto space-y-10">
-        
-        <div class="text-center">
-            <h1 class="text-6xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 italic">
-                ALAN STUDIO
-            </h1>
-            <div class="mt-2 inline-block px-3 py-1 rounded-full border border-yellow-500/30 bg-yellow-500/10">
-                <span class="text-[10px] font-bold text-yellow-500 uppercase tracking-widest">Premium Content SaaS</span>
-            </div>
+        <div class="glass p-6 rounded-3xl">
+            <h2 class="font-bold mb-4">🔥 VIRAL HOOK GENERATOR</h2>
+            <input id="topic" type="text" placeholder="Topik sejarah/affiliate..." class="w-full bg-white/5 p-4 rounded-xl mb-4 outline-none border border-white/10">
+            <button onclick="doHook()" id="btnH" class="w-full bg-yellow-500 text-black font-bold py-4 rounded-xl">GENERATE HOOK</button>
+            <div id="hBox" class="mt-4 p-4 bg-black/40 rounded-xl hidden text-sm italic text-gray-300"></div>
         </div>
 
-        <div class="card-cyber p-8 rounded-3xl shadow-2xl">
-            <div class="flex items-center gap-3 mb-6">
-                <div class="h-8 w-1 bg-yellow-500 rounded-full"></div>
-                <h2 class="text-xl font-bold tracking-tight">AI VIRAL HOOK GENERATOR</h2>
-            </div>
+        <div class="glass p-6 rounded-3xl">
+            <h2 class="font-bold mb-4">🎙️ PREMIUM NARRATOR AI</h2>
+            <textarea id="ttsT" rows="4" placeholder="Narasi konten..." class="w-full bg-white/5 p-4 rounded-xl mb-4 outline-none border border-white/10"></textarea>
             
-            <div class="space-y-5">
-                <input id="topic" type="text" placeholder="Masukkan topik konten (Contoh: Sejarah Majapahit)" 
-                       class="w-full bg-white/5 border border-white/10 p-4 rounded-xl focus:outline-none focus:border-yellow-500 transition-all text-white">
-                
-                <button onclick="generateHook()" id="btnHook" class="w-full btn-gold font-bold py-4 rounded-xl transition-all">
-                    GENERATE HOOK SEKARANG
-                </button>
-            </div>
+            <select id="vSel" class="w-full bg-gray-800 p-4 rounded-xl mb-4 text-sm">
+                <option value="id-ID-ArdiNeural">🎙️ Narator Cowok (Pro)</option>
+                <option value="id-ID-GadisNeural">🎙️ Narator Cewek (Pro)</option>
+            </select>
 
-            <div id="hookBox" class="mt-6 p-5 bg-black/40 border border-white/5 rounded-2xl hidden">
-                <p id="hookText" class="text-sm leading-relaxed text-gray-300 italic whitespace-pre-line"></p>
-            </div>
-        </div>
+            <button onclick="doTTS()" id="btnT" class="w-full bg-green-600 font-bold py-4 rounded-xl mb-4 text-white">PROSES SUARA</button>
 
-        <div class="card-cyber p-8 rounded-3xl shadow-2xl">
-            <div class="flex items-center gap-3 mb-6">
-                <div class="h-8 w-1 bg-green-500 rounded-full"></div>
-                <h2 class="text-xl font-bold tracking-tight">PREMIUM NARRATOR (DOWNLOAD MP3)</h2>
+            <div id="aBox" class="hidden p-4 bg-black/40 rounded-xl border border-white/5 text-center">
+                <audio id="aud" controls class="w-full mb-4"></audio>
+                <a id="dl" href="#" download="AlanStudio.mp3" class="text-blue-400 font-bold text-sm underline">DOWNLOAD MP3</a>
             </div>
-
-            <div class="space-y-5">
-                <textarea id="ttsInput" rows="5" placeholder="Tempel narasi video di sini..." 
-                          class="w-full bg-white/5 border border-white/10 p-4 rounded-xl focus:outline-none focus:border-green-500 transition-all text-white"></textarea>
-                
-                <button onclick="generateAudio()" id="btnAudio" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-4 rounded-xl transition-all">
-                    PROSES SUARA PREMIUM
-                </button>
-            </div>
-
-            <div id="audioPlayerBox" class="mt-6 p-6 bg-black/40 rounded-2xl border border-white/5 hidden">
-                <audio id="audioElement" controls class="w-full mb-4"></audio>
-                <a id="downloadBtn" href="#" download="AlanStudio_Voice.mp3" 
-                   class="flex items-center justify-center gap-2 w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl text-sm transition-all">
-                    DOWNLOAD HASIL AUDIO (.MP3)
-                </a>
-            </div>
-        </div>
-
-        <div class="text-center text-[10px] text-gray-600 font-bold tracking-widest uppercase">
-            Alan Studio Digital Project • All Rights Reserved 2026
         </div>
     </div>
 
     <script>
-        // Logika Hook
-        async function generateHook() {
-            const topic = document.getElementById('topic').value;
-            const btn = document.getElementById('btnHook');
-            if(!topic) return alert("Topik belum diisi!");
-            
-            btn.innerText = "SEDANG BERPIKIR...";
-            try {
-                const res = await fetch(`/api/hook?topic=${encodeURIComponent(topic)}`);
-                const data = await res.json();
-                document.getElementById('hookBox').classList.remove('hidden');
-                document.getElementById('hookText').innerText = data.hook || "Error: Cek API Key!";
-            } finally {
-                btn.innerText = "GENERATE HOOK SEKARANG";
-            }
+        async function doHook() {
+            const t = document.getElementById('topic').value;
+            if(!t) return alert("Isi topik!");
+            document.getElementById('btnH').innerText = "MIKIR...";
+            const res = await fetch(`/api/hook?topic=${encodeURIComponent(t)}`);
+            const d = await res.json();
+            document.getElementById('hBox').classList.remove('hidden');
+            document.getElementById('hBox').innerText = d.hook || d.error;
+            document.getElementById('btnH').innerText = "GENERATE HOOK";
         }
 
-        // Logika TTS Premium
-        async function generateAudio() {
-            const text = document.getElementById('ttsInput').value;
-            const btn = document.getElementById('btnAudio');
-            if(!text) return alert("Narasi kosong!");
-
-            btn.innerText = "MENGOLAH SUARA...";
-            try {
-                const res = await fetch(`/api/tts?text=${encodeURIComponent(text)}`);
-                const data = await res.json();
-                if(data.audioUrl) {
-                    document.getElementById('audioPlayerBox').classList.remove('hidden');
-                    document.getElementById('audioElement').src = data.audioUrl;
-                    document.getElementById('downloadBtn').href = data.audioUrl;
-                    document.getElementById('audioElement').play();
-                }
-            } finally {
-                btn.innerText = "PROSES SUARA PREMIUM";
+        async function doTTS() {
+            const t = document.getElementById('ttsT').value;
+            const v = document.getElementById('vSel').value;
+            if(!t) return alert("Isi teks!");
+            document.getElementById('btnT').innerText = "PROSES...";
+            const res = await fetch(`/api/tts?text=${encodeURIComponent(t)}&voice=${v}`);
+            const d = await res.json();
+            if(d.audioUrl) {
+                document.getElementById('aBox').classList.remove('hidden');
+                document.getElementById('aud').src = d.audioUrl;
+                document.getElementById('dl').href = d.audioUrl;
+                document.getElementById('aud').play();
             }
+            document.getElementById('btnT').innerText = "PROSES SUARA";
         }
     </script>
 </body>
