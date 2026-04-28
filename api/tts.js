@@ -1,11 +1,11 @@
 export default async function handler(req, res) {
-  const { text, lang } = req.query; // Kita tambah parameter lang
-  const language = lang || 'id'; // Default Indonesia
-  
-  if (!text) return res.status(400).json({ error: 'Teks kosong' });
+  const { text, voice } = req.query;
+  const selectedVoice = voice || 'id-ID-ArdiNeural';
 
-  // Jalur Google TTS Gratis
-  const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${language}&client=tw-ob`;
+  if (!text) return res.status(400).json({ error: "Teks kosong!" });
+
+  // Pake provider Edge-TTS Gratis (Bukan Google Translate)
+  const url = `https://api.pawan.krd/tts?text=${encodeURIComponent(text)}&voice=${selectedVoice}`;
 
   res.status(200).json({ audioUrl: url });
 }
