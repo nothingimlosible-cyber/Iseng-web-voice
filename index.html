@@ -4,53 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Alan Studio - AI Viral Hook</title>
+    <title>ALAN STUDIO | AI Content Engine</title>
+    <style>
+        body { background-color: #050505; }
+        .glass { background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
 </head>
-<body class="bg-black text-gray-100 min-h-screen flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-gray-900 border border-gray-800 p-8 rounded-2xl shadow-2xl">
-        <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-600 mb-2">Alan Studio</h1>
-        <p class="text-gray-400 text-sm mb-6">Bikin konten sejarah atau affiliate jadi viral otomatis.</p>
+<body class="text-gray-100 min-h-screen p-4 flex flex-col items-center">
 
-        <div class="space-y-4">
-            <div>
-                <label class="text-xs font-bold uppercase text-gray-500 mb-1 block">Topik Konten</label>
-                <input id="topic" type="text" class="w-full bg-gray-800 border border-gray-700 p-3 rounded-lg focus:outline-none focus:border-yellow-500 transition" placeholder="Misal: Rahasia Gajah Mada">
+    <div class="max-w-xl w-full space-y-6 mt-10">
+        <div class="text-center">
+            <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">ALAN STUDIO</h1>
+            <p class="text-gray-500 text-sm tracking-widest mt-1 uppercase">AI Viral Engine v1.0</p>
+        </div>
+
+        <div class="glass p-6 rounded-3xl shadow-2xl">
+            <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+                <span class="text-yellow-500">🔥</span> AI Viral Hook Generator
+            </h2>
+            <div class="space-y-3">
+                <input id="topic" type="text" placeholder="Masukkan topik (cth: Sejarah Majapahit)" 
+                       class="w-full bg-gray-800 border border-gray-700 p-4 rounded-2xl focus:outline-none focus:border-yellow-500 transition">
+                <button onclick="generateHook()" id="btnHook" 
+                        class="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-black py-4 rounded-2xl transition active:scale-95 shadow-lg shadow-yellow-500/20">
+                    GENERATE HOOK VIRAL
+                </button>
             </div>
-            
-            <button onclick="generateHook()" id="btn" class="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 rounded-lg transition transform active:scale-95">Minta Hook Viral 🚀</button>
+            <div id="hookBox" class="mt-4 p-4 bg-gray-900/50 border-l-4 border-yellow-500 rounded-xl hidden">
+                <p id="hookText" class="text-sm leading-relaxed whitespace-pre-line text-gray-300"></p>
+            </div>
         </div>
 
-        <div id="resultBox" class="mt-8 p-4 bg-gray-800 border-l-4 border-yellow-500 rounded hidden">
-            <p id="resultText" class="text-sm leading-relaxed whitespace-pre-line"></p>
+        <div class="glass p-6 rounded-3xl shadow-2xl">
+            <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+                <span class="text-green-500">🎙️</span> Unlimited Text-to-Speech
+            </h2>
+            <div class="space-y-3">
+                <textarea id="ttsInput" rows="5" placeholder="Tempel narasi panjangmu di sini..." 
+                          class="w-full bg-gray-800 border border-gray-700 p-4 rounded-2xl focus:outline-none focus:border-green-500 transition"></textarea>
+                <div class="flex gap-2">
+                    <button onclick="playTTS()" class="flex-[2] bg-green-600 hover:bg-green-700 font-bold py-4 rounded-2xl transition active:scale-95">
+                        PUTAR SUARA
+                    </button>
+                    <button onclick="stopTTS()" class="flex-1 bg-gray-800 hover:bg-red-900 border border-gray-700 font-bold py-4 rounded-2xl transition">
+                        STOP
+                    </button>
+                </div>
+            </div>
         </div>
+
+        <p class="text-center text-gray-600 text-xs mt-10">
+            &copy; 2026 Alan Studio Digital. Built for Creators.
+        </p>
     </div>
 
     <script>
+        // --- LOGIKA AI HOOK ---
         async function generateHook() {
             const topic = document.getElementById('topic').value;
-            const btn = document.getElementById('btn');
-            const resultBox = document.getElementById('resultBox');
-            const resultText = document.getElementById('resultText');
+            const btn = document.getElementById('btnHook');
+            const box = document.getElementById('hookBox');
+            const text = document.getElementById('hookText');
 
-            if(!topic) return alert("Isi topiknya dulu, Bos!");
+            if(!topic) return alert("Isi topiknya dulu, Lan!");
 
-            btn.innerText = "Lagi Mikir...";
+            btn.innerText = "MENGANALISA...";
             btn.disabled = true;
 
             try {
                 const res = await fetch(`/api/hook?topic=${encodeURIComponent(topic)}`);
                 const data = await res.json();
-                
-                resultBox.classList.remove('hidden');
-                resultText.innerText = data.hook || data.error;
+                box.classList.remove('hidden');
+                text.innerText = data.hook || data.error;
             } catch (e) {
-                alert("Error koneksi!");
+                alert("Koneksi Error!");
             } finally {
-                btn.innerText = "Minta Hook Viral 🚀";
+                btn.innerText = "GENERATE HOOK VIRAL";
                 btn.disabled = false;
             }
         }
+
+        // --- LOGIKA TTS (WEB SPEECH API) ---
+        const synth = window.speechSynthesis;
+        function playTTS() {
+            const text = document.getElementById('ttsInput').value;
+            if (!text) return alert("Narasinya mana, Lan?");
+            
+            synth.cancel(); // Reset
+            const uttr = new SpeechSynthesisUtterance(text);
+            uttr.lang = 'id-ID';
+            uttr.rate = 0.95; // Speed pas buat konten
+            
+            // Pilih suara Indonesia terbaik
+            const voices = synth.getVoices();
+            const idVoice = voices.find(v => v.lang.includes('id'));
+            if(idVoice) uttr.voice = idVoice;
+
+            synth.speak(uttr);
+        }
+
+        function stopTTS() {
+            synth.cancel();
+        }
+
+        // Load voices buat beberapa browser
+        window.speechSynthesis.onvoiceschanged = () => synth.getVoices();
     </script>
 </body>
 </html>
-
