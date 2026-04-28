@@ -1,4 +1,3 @@
-// api/hook.js
 export default async function handler(req, res) {
   const topic = req.query.topic;
   const API_KEY = process.env.DEEPSEEK_API_KEY;
